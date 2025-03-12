@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String
+  date        DateTime
+  readingTime String
+  categories  String[]
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  Comment     Comment[]
+  Category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  image     String
+  role      String
+  password  String
+  createdAt DateTime @default(now())
+  Post      Post[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  Post      Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

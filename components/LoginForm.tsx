@@ -40,7 +40,7 @@ const LoginForm = () => {
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
         startTransition(async () => {
             try {
-                const response = await fetch("/api/login", {
+                const response = await fetch("/api/login-user", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

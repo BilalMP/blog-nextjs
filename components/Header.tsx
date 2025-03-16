@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import Account from "./Account";
 
 const LinkOptions = [
     { name: "Home", url: "/" },
@@ -30,8 +31,8 @@ const Header = () => {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [])
-    
+    }, []);
+
     return (
         <header
             className={cn(
@@ -63,6 +64,7 @@ const Header = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Account />
                 </nav>
                 <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

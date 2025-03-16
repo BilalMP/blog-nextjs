@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 // import { ThemeProvider } from "@/components/theme-provider";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -18,12 +19,14 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased">
-                <Header />
-                <main className="min-h-screen pt-24 pb-16 px-6 md:px-10">
-                    {children}
-                </main>
-                <Footer />
-                <Toaster />
+                <SessionProvider>
+                    <Header />
+                    <main className="min-h-screen pt-24 pb-16 px-6 md:px-10">
+                        {children}
+                    </main>
+                    <Footer />
+                    <Toaster />
+                </SessionProvider>
             </body>
         </html>
     );

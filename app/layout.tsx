@@ -3,7 +3,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
-// import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function RootLayout({
             <body className="antialiased">
                 <SessionProvider>
                     <Header />
-                    <main className="h-screen pt-24 pb-16 px-6 md:px-10">
+                    <main className="min-h-screen pt-24 pb-16 px-6 md:px-10">
                         {children}
                     </main>
                     <Footer />

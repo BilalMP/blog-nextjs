@@ -1,31 +1,82 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import FeaturedPostCard from "./FeaturedPostCard";
 
-const FeaturedPost = () => {
+interface FeaturedPost {
+    id: string;
+    title: string;
+    excerpt: string;
+    coverImage: string;
+    createdAt: string;
+    readingTime: string;
+    categories: Array<{ name: string }>;
+    author: {
+        id: string;
+        name: string;
+        image: string;
+        role: string;
+        email: string;
+        password: string;
+        createdAt: string;
+    };
+    authorId: string;
+    content: string;
+    updatedAt: string;
+}
+
+export default function FeaturedPost() {
+    const [featuredPosts, setFeaturedPosts] = useState<FeaturedPost>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchFeaturedPosts = async () => {
+            try {
+                const response = await fetch("/api/featured-post");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch featured posts");
+                }
+                const data = await response.json();
+                setFeaturedPosts(data);
+            } catch (err) {
+                setError(
+                    err instanceof Error ? err.message : "Failed to load posts"
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFeaturedPosts();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-8 text-destructive">
+                Error: {error}
+            </div>
+        );
+    }
+
+    console.log(featuredPosts)
+
     return (
-        <section className="py-10 md:py-6 px-6 md:px-10 bg-secondary/30">
+        <section className="py-12 px-4 md:px-8">
+            <h2 className="text-3xl font-bold text-center mb-8">
+                Featured Posts
+            </h2>
             <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-10">
-                    <h2 className="font-bold text-2xl md:text-3xl">
-                        Featured Post
-                    </h2>
-                </div>
-                <FeaturedPostCard post={FeaturedPostData} />
+                <FeaturedPostCard post={featuredPosts as FeaturedPost} />
             </div>
         </section>
     );
-};
-
-export default FeaturedPost;
-
-
-const FeaturedPostData = {
-    id: "1",
-    title: "TitGetting Started with Next.js and Prisma",
-    excerpt:
-        "Learn how to set up a blog using Next.js and Prisma with a PostgreSQL database for a blazing fast experience.",
-    coverImage:
-        "https://images.pexels.com/photos/100581/pexels-photo-100581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    date: "April 12, 2023",
-    readingTime: "5 min read",
-    categories: ["Category 1", "Category 2"],
-};
+}

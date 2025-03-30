@@ -2,19 +2,29 @@ import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface FeaturedPostCardProps {
-    post: {
+interface Blog {
+    id: string;
+    title: string;
+    excerpt: string;
+    coverImage: string;
+    createdAt: string;
+    readingTime: string;
+    categories: Array<{ name: string }>;
+    author: {
         id: string;
-        title: string;
-        excerpt: string;
-        coverImage: string;
-        date: string;
-        readingTime: string;
-        categories: string[];
+        name: string;
+        image: string;
+        role: string;
+        email: string;
+        password: string;
+        createdAt: string;
     };
+    authorId: string;
+    content: string;
+    updatedAt: string;
 }
 
-const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
+const FeaturedPostCard = ({ post }: { post: Blog }) => {
     return (
         <article className="relative overflow-hidden group rounded-xl bg-card border border-border/50 shadow-sm">
             <div className="grid md:grid-cols-2 h-full">
@@ -23,7 +33,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                             <span className="flex items-center">
                                 <Calendar className="mr-1 h-4 w-4" />
-                                {post.date}
+                                {post.createdAt.split("T")[0]}
                             </span>
                             <span>.</span>
                             <span>{post.readingTime}</span>

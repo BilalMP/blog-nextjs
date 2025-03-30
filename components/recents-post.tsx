@@ -1,8 +1,59 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import BlogCard from "./BlogCard";
+import router from "next/router";
+import { useCallback, useEffect, useState } from "react";
+
+interface Blog {
+    id: string;
+    title: string;
+    content: string;
+    coverImage: string;
+    date: string;
+    readingTime: string;
+    categories: Array<{ name: string }>;
+    author: {
+        name: string;
+        avatar: string;
+        bio: string;
+    };
+}
 
 const RecentsPosts = () => {
+    const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = useCallback(async () => {
+        try {
+            const response = await fetch("/api/recent-blogs");
+            const data = await response.json();
+            console.log("posts", data);
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch blogs");
+            }
+
+            if (!Array.isArray(data)) {
+                throw new Error(
+                    "Invalid data format: expected an array of blogs"
+                );
+            }
+
+            setRecentBlogs(data);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
     return (
         <section className="py-10 md:py-16 px-6 md:px-10">
             <div className="max-w-7xl mx-auto">
@@ -19,7 +70,7 @@ const RecentsPosts = () => {
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {RecentsPostsData.map((post: any) => (
+                    {recentBlogs.map((post: any) => (
                         <BlogCard
                             key={post.id}
                             post={post}
@@ -32,39 +83,3 @@ const RecentsPosts = () => {
 };
 
 export default RecentsPosts;
-
-const RecentsPostsData = [
-    {
-        id: "1",
-        title: "Getting Started with Next.js and Prisma",
-        excerpt:
-            "Learn how to set up a blog using Next.js and Prisma with a PostgreSQL database for a blazing fast experience.",
-        coverImage:
-            "https://images.pexels.com/photos/100581/pexels-photo-100581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        date: "April 12, 2023",
-        readingTime: "5 min read",
-        categories: ["Category 1", "Category 2"],
-    },
-    {
-        id: "2",
-        title: "Getting Started with Next.js and Prisma",
-        excerpt:
-            "Learn how to set up a blog using Next.js and Prisma with a PostgreSQL database for a blazing fast experience.",
-        coverImage:
-            "https://images.pexels.com/photos/100581/pexels-photo-100581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        date: "April 12, 2023",
-        readingTime: "5 min read",
-        categories: ["Category 1", "Category 2"],
-    },
-    {
-        id: "3",
-        title: "Getting Started with Next.js and Prisma",
-        excerpt:
-            "Learn how to set up a blog using Next.js and Prisma with a PostgreSQL database for a blazing fast experience.",
-        coverImage:
-            "https://images.pexels.com/photos/100581/pexels-photo-100581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        date: "April 12, 2023",
-        readingTime: "5 min read",
-        categories: ["Category 1", "Category 2"],
-    },
-];

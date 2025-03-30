@@ -30,7 +30,7 @@ const formFields: {
     name: "name" | "email" | "password" | "image" | "role";
     label: string;
     placeholder: string;
-    type: string;
+    type?: "text" | "email" | "password";
 }[] = [
     { name: "name", label: "Full Name", placeholder: "John Doe", type: "text" },
     {

@@ -12,7 +12,7 @@ interface PostContentProps {
         coverImage: string;
         date: string;
         readingTime: string;
-        categories: string[];
+        categories: Array<{ name: string }>;
         author: {
             name: string;
             avatar: string;
@@ -31,10 +31,11 @@ const PostContent = ({ post }: PostContentProps) => {
         };
 
         render();
-    }, [post.content]);
+    }, [post]);
 
     return (
         <article className="max-w-3xl mx-auto px-6 py-8">
+            {/* {renderedContent} */}
             <header className="mb-10 space-y-6">
                 <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-balance">
                     {post.title}
@@ -54,12 +55,12 @@ const PostContent = ({ post }: PostContentProps) => {
 
                 {post.categories.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                        {post.categories.map((category) => (
+                        {post.categories.map((category, index) => (
                             <span
-                                key={category}
+                                key={`${category.name}-${index}`}
                                 className="inline-block px-3 py-1 text-sm font-medium bg-secondary text-secondary-foreground rounded-full"
                             >
-                                {category}
+                                {category.name}
                             </span>
                         ))}
                     </div>
@@ -67,11 +68,14 @@ const PostContent = ({ post }: PostContentProps) => {
 
                 <div className="aspect-[21/9] overflow-hidden rounded-lg">
                     <Image
-                        src={post.coverImage}
+                        src={
+                            post.coverImage ||
+                            "https://placehold.co/1200x630?text=Blog+Cover+Image"
+                        }
                         alt={post.title}
-                        className="w-full h-full object-cover animate-image-reveal"
-                        width={500}
-                        height={500}
+                        width={1200}
+                        height={630}
+                        className="rounded-lg mb-8"
                     />
                 </div>
             </header>
